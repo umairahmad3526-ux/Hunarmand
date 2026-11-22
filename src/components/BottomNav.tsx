@@ -7,17 +7,15 @@ import { colors } from '../theme/colors';
 interface BottomNavProps {
   activeTab: TabType;
   onSelectTab: (tab: TabType) => void;
-  bookingBadgeCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onSelectTab,
-  bookingBadgeCount = 1,
 }) => {
   return (
     <View style={styles.container}>
-      {/* 1. Home Tab */}
+      {/* 1. Home / Services Tab */}
       <TouchableOpacity
         style={styles.tabButton}
         onPress={() => onSelectTab('Home')}
@@ -25,40 +23,18 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       >
         {activeTab === 'Home' ? (
           <View style={styles.activePill}>
-            <Ionicons name="home" size={20} color={colors.primaryLight} />
-            <Text style={styles.activeText}>Home</Text>
+            <Ionicons name="construct" size={19} color={colors.primaryLight} />
+            <Text style={styles.activeText}>Services</Text>
           </View>
         ) : (
           <View style={styles.inactiveWrapper}>
-            <Ionicons name="home-outline" size={22} color="#9CA3AF" />
-            <Text style={styles.inactiveText}>Home</Text>
+            <Ionicons name="construct-outline" size={22} color="#9CA3AF" />
+            <Text style={styles.inactiveText}>Services</Text>
           </View>
         )}
       </TouchableOpacity>
 
-      {/* 2. Bookings Tab */}
-      <TouchableOpacity
-        style={styles.tabButton}
-        onPress={() => onSelectTab('Bookings')}
-        activeOpacity={0.8}
-      >
-        {activeTab === 'Bookings' ? (
-          <View style={styles.activePill}>
-            <Ionicons name="calendar" size={20} color={colors.primaryLight} />
-            <Text style={styles.activeText}>Bookings</Text>
-          </View>
-        ) : (
-          <View style={styles.inactiveWrapper}>
-            <View style={styles.badgeWrapper}>
-              <Ionicons name="calendar-outline" size={22} color="#9CA3AF" />
-              {bookingBadgeCount > 0 && <View style={styles.tabDot} />}
-            </View>
-            <Text style={styles.inactiveText}>Bookings</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-
-      {/* 3. Support Tab */}
+      {/* 2. Support Tab */}
       <TouchableOpacity
         style={styles.tabButton}
         onPress={() => onSelectTab('Support')}
@@ -66,7 +42,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       >
         {activeTab === 'Support' ? (
           <View style={styles.activePill}>
-            <Ionicons name="headset" size={20} color={colors.primaryLight} />
+            <Ionicons name="headset" size={19} color={colors.primaryLight} />
             <Text style={styles.activeText}>Support</Text>
           </View>
         ) : (
@@ -77,7 +53,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         )}
       </TouchableOpacity>
 
-      {/* 4. Account Tab */}
+      {/* 3. Account Tab */}
       <TouchableOpacity
         style={styles.tabButton}
         onPress={() => onSelectTab('Account')}
@@ -85,7 +61,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       >
         {activeTab === 'Account' ? (
           <View style={styles.activePill}>
-            <Ionicons name="person" size={20} color={colors.primaryLight} />
+            <Ionicons name="person" size={19} color={colors.primaryLight} />
             <Text style={styles.activeText}>Account</Text>
           </View>
         ) : (
@@ -107,8 +83,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
-    paddingVertical: 8,
-    paddingHorizontal: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.05,
@@ -124,14 +100,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.mintLight,
-    paddingVertical: 6,
-    paddingHorizontal: 14,
+    paddingVertical: 7,
+    paddingHorizontal: 16,
     borderRadius: 20,
     gap: 6,
   },
   activeText: {
     color: colors.primaryLight,
-    fontSize: 12.5,
+    fontSize: 13,
     fontWeight: '700',
   },
   inactiveWrapper: {
@@ -143,17 +119,5 @@ const styles = StyleSheet.create({
     color: '#9CA3AF',
     fontSize: 11,
     fontWeight: '500',
-  },
-  badgeWrapper: {
-    position: 'relative',
-  },
-  tabDot: {
-    position: 'absolute',
-    top: 0,
-    right: -2,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: colors.primaryLight,
   },
 });

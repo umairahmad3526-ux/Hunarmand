@@ -3,57 +3,71 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { HomeScreen } from './src/screens/HomeScreen';
-import { BookingsScreen } from './src/screens/BookingsScreen';
 import { SupportScreen } from './src/screens/SupportScreen';
 import { AccountScreen } from './src/screens/AccountScreen';
 import { BottomNav } from './src/components/BottomNav';
-import { MOCK_BOOKINGS } from './src/data/mockData';
-import { TabType, Booking } from './src/types';
+import { INITIAL_SKILL_WORKERS } from './src/data/mockData';
+import { TabType, SkillWorker } from './src/types';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabType>('Home');
-  const [bookings, setBookings] = useState<Booking[]>(MOCK_BOOKINGS);
-  const [cartCount, setCartCount] = useState<number>(1);
+  const [workers, setWorkers] = useState<SkillWorker[]>(INITIAL_SKILL_WORKERS);
 
-  const handleAddBooking = (details: any) => {
-    const newBooking: Booking = {
-      id: `HN-${Math.floor(10000 + Math.random() * 90000)}`,
-      serviceTitle: details.service.title,
-      category: details.service.category,
-      date: details.date,
-      timeSlot: details.slot,
-      status: 'in_progress',
-      price: details.service.price,
-      currency: details.service.currency,
-      technicianName: 'Muhammad Rashid',
-      technicianPhone: '+92 301 555 0192',
-      technicianRating: 4.9,
-      address: details.address,
-    };
+  // Handle customer rating submission
+  const handleSubmitRating = (
+    workerId: string,
+    newRating: number,
+    userName: string,
+    comment: string
+  ) => {
+    setWorkers((prevWorkers) =>
+      prevWorkers.map((w) => {
+        if (w.id !== workerId) return w;
 
-    setBookings([newBooking, ...bookings]);
-    setCartCount((prev) => Math.max(0, prev - 1));
-    setActiveTab('Bookings');
+        const newReview = {
+          id: `rev-${Date.now()}`,
+          userName,
+          rating: newRating,
+          comment,
+          date: 'Just now',
+        };
+
+        const totalReviews = w.reviewsCount + 1;
+        const updatedRating =
+          (w.rating * w.reviewsCount + newRating) / totalReviews;
+
+        return {
+          ...w,
+          rating: parseFloat(updatedRating.toFixed(1)),
+          reviewsCount: totalReviews,
+          reviews: [newReview, ...w.reviews],
+        };
+      })
+    );
   };
 
   const renderActiveScreen = () => {
     switch (activeTab) {
       case 'Home':
-        return <HomeScreen onAddBooking={handleAddBooking} cartCount={cartCount} />;
-      case 'Bookings':
-        return <BookingsScreen bookings={bookings} />;
+        return (
+          <HomeScreen
+            workers={workers}
+            onSubmitRating={handleSubmitRating}
+          />
+        );
       case 'Support':
         return <SupportScreen />;
       case 'Account':
         return <AccountScreen />;
       default:
-        return <HomeScreen onAddBooking={handleAddBooking} cartCount={cartCount} />;
+        return (
+          <HomeScreen
+            workers={workers}
+            onSubmitRating={handleSubmitRating}
+          />
+        );
     }
   };
-
-  const activeBookingsCount = bookings.filter(
-    (b) => b.status === 'in_progress' || b.status === 'confirmed'
-  ).length;
 
   return (
     <SafeAreaProvider>
@@ -67,7 +81,6 @@ export default function App() {
         <BottomNav
           activeTab={activeTab}
           onSelectTab={setActiveTab}
-          bookingBadgeCount={activeBookingsCount}
         />
       </SafeAreaView>
     </SafeAreaProvider>

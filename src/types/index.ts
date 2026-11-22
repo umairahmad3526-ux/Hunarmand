@@ -1,25 +1,40 @@
+export interface WorkerReview {
+  id: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export interface SkillWorker {
+  id: string;
+  name: string;
+  categoryId: string; // e.g., 'ac-repair'
+  categoryTitle: string; // e.g., 'AC Repair'
+  avatar: string;
+  shopName: string;
+  shopAddress: string;
+  city: string;
+  whatsappNumber: string; // international format e.g. '923015550192'
+  displayPhone: string; // formatted e.g. '+92 301 555 0192'
+  rating: number;
+  reviewsCount: number;
+  experienceYears: number;
+  verified: boolean;
+  distance: string; // e.g. '0.8 km away'
+  bio: string;
+  skills: string[];
+  openingHours: string;
+  reviews: WorkerReview[];
+}
+
 export interface ServiceCategory {
   id: string;
   title: string;
   iconName: string;
   iconType: 'Ionicons' | 'MaterialCommunityIcons' | 'Feather';
-}
-
-export interface RecommendedService {
-  id: string;
-  title: string;
-  imageUrl: string;
-  rating: number;
-  reviewsCount: string;
-  duration: string;
-  price: number;
-  originalPrice: number;
-  currency: string;
-  isBestseller?: boolean;
-  verified: boolean;
+  workerCount: number;
   description: string;
-  category: string;
-  features: string[];
 }
 
 export interface TrustBadge {
@@ -27,22 +42,6 @@ export interface TrustBadge {
   title: string;
   iconName: string;
   iconType: 'Ionicons' | 'MaterialCommunityIcons';
-  subtitle?: string;
 }
 
-export interface Booking {
-  id: string;
-  serviceTitle: string;
-  category: string;
-  date: string;
-  timeSlot: string;
-  status: 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
-  price: number;
-  currency: string;
-  technicianName: string;
-  technicianPhone: string;
-  technicianRating: number;
-  address: string;
-}
-
-export type TabType = 'Home' | 'Bookings' | 'Support' | 'Account';
+export type TabType = 'Home' | 'Support' | 'Account';
