@@ -7,69 +7,131 @@ import { colors } from '../theme/colors';
 interface BottomNavProps {
   activeTab: TabType;
   onSelectTab: (tab: TabType) => void;
+  unreadMessagesCount?: number;
+  activeRequestsCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onSelectTab,
+  unreadMessagesCount = 1,
+  activeRequestsCount = 1,
 }) => {
   return (
     <View style={styles.container}>
-      {/* 1. Home / Services Tab */}
+      {/* 1. Home */}
       <TouchableOpacity
         style={styles.tabButton}
         onPress={() => onSelectTab('Home')}
         activeOpacity={0.8}
       >
-        {activeTab === 'Home' ? (
-          <View style={styles.activePill}>
-            <Ionicons name="construct" size={19} color={colors.primaryLight} />
-            <Text style={styles.activeText}>Services</Text>
-          </View>
-        ) : (
-          <View style={styles.inactiveWrapper}>
-            <Ionicons name="construct-outline" size={22} color="#9CA3AF" />
-            <Text style={styles.inactiveText}>Services</Text>
-          </View>
-        )}
+        <Ionicons
+          name={activeTab === 'Home' ? 'home' : 'home-outline'}
+          size={22}
+          color={activeTab === 'Home' ? colors.primaryLight : '#9CA3AF'}
+        />
+        <Text
+          style={[
+            styles.tabLabel,
+            activeTab === 'Home' && styles.activeTabLabel,
+          ]}
+        >
+          Home
+        </Text>
       </TouchableOpacity>
 
-      {/* 2. Support Tab */}
+      {/* 2. Categories */}
       <TouchableOpacity
         style={styles.tabButton}
-        onPress={() => onSelectTab('Support')}
+        onPress={() => onSelectTab('Categories')}
         activeOpacity={0.8}
       >
-        {activeTab === 'Support' ? (
-          <View style={styles.activePill}>
-            <Ionicons name="headset" size={19} color={colors.primaryLight} />
-            <Text style={styles.activeText}>Support</Text>
-          </View>
-        ) : (
-          <View style={styles.inactiveWrapper}>
-            <Ionicons name="headset-outline" size={22} color="#9CA3AF" />
-            <Text style={styles.inactiveText}>Support</Text>
-          </View>
-        )}
+        <Ionicons
+          name={activeTab === 'Categories' ? 'grid' : 'grid-outline'}
+          size={22}
+          color={activeTab === 'Categories' ? colors.primaryLight : '#9CA3AF'}
+        />
+        <Text
+          style={[
+            styles.tabLabel,
+            activeTab === 'Categories' && styles.activeTabLabel,
+          ]}
+        >
+          Categories
+        </Text>
       </TouchableOpacity>
 
-      {/* 3. Account Tab */}
+      {/* 3. Requests */}
       <TouchableOpacity
         style={styles.tabButton}
-        onPress={() => onSelectTab('Account')}
+        onPress={() => onSelectTab('Requests')}
         activeOpacity={0.8}
       >
-        {activeTab === 'Account' ? (
-          <View style={styles.activePill}>
-            <Ionicons name="person" size={19} color={colors.primaryLight} />
-            <Text style={styles.activeText}>Account</Text>
-          </View>
-        ) : (
-          <View style={styles.inactiveWrapper}>
-            <Ionicons name="person-outline" size={22} color="#9CA3AF" />
-            <Text style={styles.inactiveText}>Account</Text>
-          </View>
-        )}
+        <View style={styles.badgeWrapper}>
+          <Ionicons
+            name={activeTab === 'Requests' ? 'document-text' : 'document-text-outline'}
+            size={22}
+            color={activeTab === 'Requests' ? colors.primaryLight : '#9CA3AF'}
+          />
+          {activeRequestsCount > 0 && <View style={styles.indicatorDot} />}
+        </View>
+        <Text
+          style={[
+            styles.tabLabel,
+            activeTab === 'Requests' && styles.activeTabLabel,
+          ]}
+        >
+          Requests
+        </Text>
+      </TouchableOpacity>
+
+      {/* 4. Messages */}
+      <TouchableOpacity
+        style={styles.tabButton}
+        onPress={() => onSelectTab('Messages')}
+        activeOpacity={0.8}
+      >
+        <View style={styles.badgeWrapper}>
+          <Ionicons
+            name={activeTab === 'Messages' ? 'chatbubble-ellipses' : 'chatbubble-ellipses-outline'}
+            size={22}
+            color={activeTab === 'Messages' ? colors.primaryLight : '#9CA3AF'}
+          />
+          {unreadMessagesCount > 0 && (
+            <View style={styles.messageCountBadge}>
+              <Text style={styles.messageCountText}>{unreadMessagesCount}</Text>
+            </View>
+          )}
+        </View>
+        <Text
+          style={[
+            styles.tabLabel,
+            activeTab === 'Messages' && styles.activeTabLabel,
+          ]}
+        >
+          Messages
+        </Text>
+      </TouchableOpacity>
+
+      {/* 5. Profile */}
+      <TouchableOpacity
+        style={styles.tabButton}
+        onPress={() => onSelectTab('Profile')}
+        activeOpacity={0.8}
+      >
+        <Ionicons
+          name={activeTab === 'Profile' ? 'person' : 'person-outline'}
+          size={22}
+          color={activeTab === 'Profile' ? colors.primaryLight : '#9CA3AF'}
+        />
+        <Text
+          style={[
+            styles.tabLabel,
+            activeTab === 'Profile' && styles.activeTabLabel,
+          ]}
+        >
+          Profile
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -82,42 +144,57 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: '#F3F4F6',
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
     elevation: 8,
   },
   tabButton: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 3,
   },
-  activePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.mintLight,
-    paddingVertical: 7,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    gap: 6,
+  tabLabel: {
+    fontSize: 10.5,
+    fontWeight: '500',
+    color: '#9CA3AF',
   },
-  activeText: {
+  activeTabLabel: {
     color: colors.primaryLight,
-    fontSize: 13,
     fontWeight: '700',
   },
-  inactiveWrapper: {
+  badgeWrapper: {
+    position: 'relative',
+  },
+  indicatorDot: {
+    position: 'absolute',
+    top: -1,
+    right: -2,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    backgroundColor: colors.primaryAccent,
+  },
+  messageCountBadge: {
+    position: 'absolute',
+    top: -3,
+    right: -6,
+    minWidth: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: colors.badgeRed,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 2,
+    paddingHorizontal: 3,
   },
-  inactiveText: {
-    color: '#9CA3AF',
-    fontSize: 11,
-    fontWeight: '500',
+  messageCountText: {
+    fontSize: 8.5,
+    fontWeight: '800',
+    color: '#FFFFFF',
   },
 });

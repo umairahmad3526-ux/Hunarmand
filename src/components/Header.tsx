@@ -1,69 +1,58 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../theme/colors';
 
 interface HeaderProps {
-  currentAddress?: string;
-  onPressLocation?: () => void;
+  userName?: string;
+  avatarUrl?: string;
+  onPressProfile?: () => void;
   onPressNotifications?: () => void;
-  onPressCart?: () => void;
-  cartCount?: number;
+  unreadNotificationsCount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  currentAddress = '221B Baker Street, London',
-  onPressLocation,
+  userName = 'Ahmad',
+  avatarUrl = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+  onPressProfile,
   onPressNotifications,
-  onPressCart,
-  cartCount = 0,
+  unreadNotificationsCount = 1,
 }) => {
   return (
     <View style={styles.container}>
-      {/* Left: Location selection */}
+      {/* Left: User Avatar & Greeting */}
       <TouchableOpacity
-        style={styles.locationContainer}
-        onPress={onPressLocation}
-        activeOpacity={0.7}
+        style={styles.profileRow}
+        onPress={onPressProfile}
+        activeOpacity={0.75}
       >
-        <View style={styles.locationPinWrapper}>
-          <Ionicons name="location-sharp" size={22} color={colors.primaryLight} />
-        </View>
-        <View style={styles.locationTextWrapper}>
-          <View style={styles.addressRow}>
-            <Text style={styles.addressText} numberOfLines={1}>
-              {currentAddress}
-            </Text>
-            <Ionicons name="chevron-down" size={15} color={colors.textPrimary} style={styles.chevron} />
+        <Image
+          source={{ uri: avatarUrl }}
+          style={styles.avatar}
+          resizeMode="cover"
+        />
+        <View style={styles.greetingWrapper}>
+          <Text style={styles.greetingSub}>Good morning,</Text>
+          <View style={styles.nameRow}>
+            <Text style={styles.userName}>{userName}</Text>
+            <Text style={styles.waveEmoji}> 👋</Text>
           </View>
-          <Text style={styles.deliverySubtext}>Delivering to your location</Text>
         </View>
       </TouchableOpacity>
 
-      {/* Right: Actions (Notification & Cart) */}
-      <View style={styles.actionsContainer}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={onPressNotifications}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="notifications-outline" size={20} color={colors.textPrimary} />
-          <View style={styles.notificationDot} />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={onPressCart}
-          activeOpacity={0.7}
-        >
-          <Ionicons name="cart-outline" size={20} color={colors.textPrimary} />
-          {cartCount > 0 && (
-            <View style={styles.cartBadge}>
-              <Text style={styles.cartBadgeText}>{cartCount}</Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
+      {/* Right: Circular Notification Bell */}
+      <TouchableOpacity
+        style={styles.notificationBtn}
+        onPress={onPressNotifications}
+        activeOpacity={0.75}
+      >
+        <Ionicons name="notifications-outline" size={20} color={colors.textPrimary} />
+        {unreadNotificationsCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{unreadNotificationsCount}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -73,53 +62,49 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingTop: 8,
-    paddingBottom: 10,
+    paddingBottom: 12,
     backgroundColor: '#FFFFFF',
   },
-  locationContainer: {
+  profileRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-    marginRight: 12,
+    gap: 12,
   },
-  locationPinWrapper: {
-    marginRight: 8,
-    marginTop: 2,
+  avatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
   },
-  locationTextWrapper: {
-    flex: 1,
+  greetingWrapper: {
+    justifyContent: 'center',
   },
-  addressRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  addressText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    maxWidth: '85%',
-    letterSpacing: -0.2,
-  },
-  chevron: {
-    marginLeft: 4,
-  },
-  deliverySubtext: {
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 1,
+  greetingSub: {
+    fontSize: 12.5,
+    color: '#6B7280',
     fontWeight: '400',
   },
-  actionsContainer: {
+  nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
   },
-  iconButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+  userName: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: colors.textPrimary,
+    letterSpacing: -0.3,
+  },
+  waveEmoji: {
+    fontSize: 16,
+  },
+  notificationBtn: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
@@ -132,32 +117,23 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-  notificationDot: {
+  badge: {
     position: 'absolute',
-    top: 9,
-    right: 9,
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: colors.accent,
+    top: 5,
+    right: 5,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: colors.badgeRed,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
     borderWidth: 1.5,
     borderColor: '#FFFFFF',
   },
-  cartBadge: {
-    position: 'absolute',
-    top: -3,
-    right: -3,
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    paddingHorizontal: 4,
-    height: 16,
-    minWidth: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cartBadgeText: {
+  badgeText: {
     color: '#FFFFFF',
     fontSize: 9,
-    fontWeight: 'bold',
+    fontWeight: '800',
   },
 });
